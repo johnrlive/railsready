@@ -186,5 +186,5 @@ echo -e "#################################\n"
 
 echo -e "\n !!! logout and back in to access Ruby !!!\n"
 
-echo -e "\n Thanks!\n"
+echo -e "\n Thanks!\n-Josh\n"
 
