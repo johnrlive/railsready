@@ -25,11 +25,6 @@ echo -e "\nInstalling Homebrew"
 /usr/bin/ruby -e "$(curl -fsSL https://raw.github.com/gist/1209017)" >> $log_file 2>&1
 echo "==> done..."
 
-# Install imagemagick
-echo -e "\n=> Installing imagemagick (this may take a while)..."
-brew install imagemagick >> $log_file 2>&1
-echo "==> done..."
-
 # Install git-core
 echo -e "\n=> Updating git..."
 brew install git >> $log_file 2>&1

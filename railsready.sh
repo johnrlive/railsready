@@ -8,14 +8,15 @@
 # Contributions from: Wayne E. Seguin <wayneeseguin@gmail.com>
 # Contributions from: Ryan McGeary <ryan@mcgeary.org>
 #
+# http://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p0.tar.gz
 shopt -s nocaseglob
 set -e
 
-ruby_version="1.9.3"
-ruby_version_string="1.9.3-p125"
-ruby_source_url="http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p125.tar.gz"
-ruby_source_tar_name="ruby-1.9.3-p125.tar.gz"
-ruby_source_dir_name="ruby-1.9.3-p125"
+ruby_version="2.0.0"
+ruby_version_string="2.0.0-p195"
+ruby_source_url="http://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p195.tar.gz"
+ruby_source_tar_name="ruby-2.0.0-p195.tar.gz"
+ruby_source_dir_name="ruby-2.0.0-p195"
 script_runner=$(whoami)
 railsready_path=$(cd && pwd)/railsready
 log_file="$railsready_path/install.log"
@@ -45,12 +46,12 @@ if [[ $MACHTYPE = *linux* ]] ; then
   fi
 elif [[ $MACHTYPE = *darwin* ]] ; then
   distro="osx"
-    if [[ ! -s /Library/Developer/Shared/XcodeTools.plist ]] ; then
-      echo -e "\nXCode must be installed in order to build required software.\n"
+    if [[ ! -f $(which gcc) ]]; then
+      echo -e "\nXCode/GCC must be installed in order to build required software. Note that XCode does not automatically do this, but you may have to go to the Preferences menu and install command line tools manually.\n"
       exit 1
-    fi  
+    fi
 else
-  echo -e "\nRails Ready currently only supports Ubuntu and CentOS and OSX\n"
+  echo -e "\nRails Ready currently only supports Ubuntu, CentOS and OSX\n"
   exit 1
 fi
 
@@ -61,14 +62,11 @@ if [ $script_runner == "root" ] ; then
 fi
 
 echo -e "\n\n"
-echo "!!! This script will update your system! Run on a fresh install only !!!"
 echo "run tail -f $log_file in a new terminal to watch the install"
 
 echo -e "\n"
 echo "What this script gets you:"
-echo " * An updated system"
 echo " * Ruby $ruby_version_string"
-echo " * Imagemagick"
 echo " * libs needed to run Rails (sqlite, mysql, etc)"
 echo " * Bundler, Passenger, and Rails gems"
 echo " * Git"
@@ -126,24 +124,24 @@ if [ $whichRuby -eq 1 ] ; then
 elif [ $whichRuby -eq 2 ] ; then
   #thanks wayneeseguin :)
   echo -e "\n=> Installing RVM the Ruby enVironment Manager http://rvm.beginrescueend.com/rvm/install/ \n"
-  curl -O -L -k https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer
-  chmod +x rvm-installer
-  "$PWD/rvm-installer" >> $log_file 2>&1
-  [[ -f rvm-installer ]] && rm -f rvm-installer
+  \curl -L https://get.rvm.io | bash >> $log_file 2>&1
   echo -e "\n=> Setting up RVM to load with new shells..."
   #if RVM is installed as user root it goes to /usr/local/rvm/ not ~/.rvm
-  echo  '[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # Load RVM into a shell session *as a function*' >> "$HOME/.bash_profile"
-  echo  '[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # Load RVM into a shell session *as a function*' >> "$HOME/.bashrc"
+  if [ -f ~/.bash_profile ] ; then
+    if [ -f ~/.profile ] ; then
+      echo 'source ~/.profile' >> "$HOME/.bash_profile"
+    fi
+  fi
   echo "==> done..."
   echo "=> Loading RVM..."
+  if [ -f ~/.profile ] ; then
+    source ~/.profile
+  fi
   if [ -f ~/.bashrc ] ; then
     source ~/.bashrc
   fi
   if [ -f ~/.bash_profile ] ; then
     source ~/.bash_profile
-  fi
-  if [ -f ~/.rvm/scripts/rvm ] ; then
-    source ~/.rvm/scripts/rvm
   fi
   echo "==> done..."
   echo -e "\n=> Installing Ruby $ruby_version_string (this will take a while)..."
@@ -164,9 +162,6 @@ echo -e "\n=> Reloading shell so ruby and rubygems are available..."
 if [ -f ~/.bashrc ] ; then
   source ~/.bashrc
 fi
-if [ -f ~/.bash_profile ] ; then
-  source ~/.bash_profile
-fi
 echo "==> done..."
 
 echo -e "\n=> Updating Rubygems..."
@@ -179,9 +174,9 @@ echo "==> done..."
 
 echo -e "\n=> Installing Bundler, Passenger and Rails..."
 if [ $whichRuby -eq 1 ] ; then
-  sudo gem install bundler passenger rails --no-ri --no-rdoc >> $log_file 2>&1
+  sudo gem install bundler passenger rails --no-ri --no-rdoc -f >> $log_file 2>&1
 elif [ $whichRuby -eq 2 ] ; then
-  gem install bundler passenger rails --no-ri --no-rdoc >> $log_file 2>&1
+  gem install bundler passenger rails --no-ri --no-rdoc -f >> $log_file 2>&1
 fi
 echo "==> done..."
 
