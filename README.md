@@ -1,5 +1,5 @@
 #Rails Ready
-###Ruby and Rails setup script for Linux and OSX
+###Ruby 1.9.3 and Rails setup script for Linux and OSX
 ###Distros supported:
  * Ubuntu 10.04 LTS, 10.10 and 11.04
  * CentOS 5 (utilizes the Fedora EPEL repo)
@@ -10,10 +10,10 @@
 
 ###To run:
 ####Linux
-  * `wget --no-check-certificate https://raw.github.com/joshfng/railsready/master/railsready.sh && bash railsready.sh`
+  * `wget --no-check-certificate https://raw.github.com/johnrlive/railsready/master/railsready.sh && bash railsready.sh`
 
 ####OSX
-  * `curl -O https://raw.github.com/joshfng/railsready/master/railsready.sh && bash railsready.sh`
+  * `curl -O https://raw.github.com/johnrlive/railsready/master/railsready.sh && bash railsready.sh`
 
 The script will ask if you want to build Ruby from source or install RVM
 
